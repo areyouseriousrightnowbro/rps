@@ -1,10 +1,10 @@
 input.onButtonPressed(Button.A, function () {
-    if (radio_set == false) {
+    if (state == 0) {
         position += 1
         position = position % 5
         radio.setGroup(radio_group[position])
         basic.showString("" + (title_screen[position]))
-    } else if (input_window == true) {
+    } else if (state == 1) {
         position += 1
         position = position % 3
         if (position == 0) {
@@ -39,81 +39,32 @@ input.onButtonPressed(Button.A, function () {
 })
 input.onButtonPressed(Button.AB, function () {
     radio.sendString("" + (choice[position]))
-    input_window = false
-    waiting = true
+    state += 1
     basic.clearScreen()
 })
-radio.onReceivedString(function (receivedString) {
-    if (waiting == true) {
-        waiting = false
-        result = true
-        if (receivedString == "R") {
-            if (position == 0) {
-                basic.clearScreen()
-                radio.sendString("DRAW")
-                basic.showString("DRAW")
-            } else if (position == 1) {
-                basic.clearScreen()
-                radio.sendString("YOU WIN")
-                basic.showString("YOU LOSE")
-            } else if (position == 2) {
-                basic.clearScreen()
-                radio.sendString("YOU LOSE")
-                basic.showString("YOU WIN")
-            }
-        } else if (receivedString == "P") {
-            if (position == 1) {
-                basic.clearScreen()
-                radio.sendString("DRAW")
-                basic.showString("DRAW")
-            } else if (position == 2) {
-                basic.clearScreen()
-                radio.sendString("YOU WIN")
-                basic.showString("YOU LOSE")
-            } else if (position == 0) {
-                basic.clearScreen()
-                radio.sendString("YOU LOSE")
-                basic.showString("YOU WIN")
-            }
-        } else if (receivedString == "S") {
-            if (position == 2) {
-                basic.clearScreen()
-                radio.sendString("DRAW")
-                basic.showString("DRAW")
-            } else if (position == 0) {
-                basic.clearScreen()
-                radio.sendString("YOU WIN")
-                basic.showString("YOU LOSE")
-            } else if (position == 1) {
-                basic.clearScreen()
-                radio.sendString("YOU LOSE")
-                basic.showString("YOU WIN")
-            }
-        }
-    } else if (waiting == false) {
-        basic.showString(receivedString)
-    }
-})
 input.onButtonPressed(Button.B, function () {
-    if (radio_set == false) {
-        radio_set = true
+    if (state == 0) {
         basic.showIcon(IconNames.Yes)
         basic.clearScreen()
-        input_window = true
+        state += 1
     }
 })
 // NOTES FOR NEXT CLASS:
 // Setting choices to select either rock paper or scissors then show symbol for players choice
-let result = false
-let waiting = false
-let input_window = false
 let choice: string[] = []
 let title_screen: string[] = []
 let radio_group: number[] = []
+let state = 0
 let position = 0
-let radio_set = false
-radio_set = false
 position = 0
+state = 0
+state = [
+0,
+1,
+2,
+3,
+4
+]
 radio_group = [
 202,
 203,
@@ -130,7 +81,7 @@ title_screen = [
 ]
 choice = ["R", "P", "S"]
 basic.forever(function () {
-    while (input_window == true) {
+    while (state == 1) {
         basic.showLeds(`
             . . . . .
             . . . . .
